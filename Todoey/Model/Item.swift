@@ -8,9 +8,11 @@
 
 import Foundation
 
-class Item {
-    var title = ""
-    var done = false
+class Item: Codable {
+    
+    // Wenn die Klasse encodable sein soll dürfen nur Standarddatentypen verwendet werden
+    var title: String = ""
+    var done: Bool = false
     
     
 }
