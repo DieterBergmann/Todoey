@@ -12,6 +12,7 @@ import CoreData
 class TodoListViewController: UITableViewController {
 
     var itemArray = [Item]()
+
     var selectedCategory: Category? {
         didSet {
             loadItems()
@@ -113,16 +114,22 @@ class TodoListViewController: UITableViewController {
     }
     
     // Funktion mit default value, falls kein Wert übergeben wird.
+    // Parameter predicate im Aufruf ist die Sucheigenschaft
     func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
         
+        // z.B Ergebnis von categoryPredicate = parentCategory.name MATCHES "Privat"
         let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        print("categoryPredicate = \(categoryPredicate)")
         
+        // Abfrage ob die Eigenschaft der Suchanfrage (predicate) != nil ist, dann Abfrage der Suchanfrage,
+        // ansonsten abfragen der Kategorien
         if let additionalPredicate = predicate {
             request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
         } else {
             request.predicate = categoryPredicate
         }
         
+        print("loadItems: requestPredicate = \(request.predicate!)")
         
         do {
             itemArray = try context.fetch(request)
@@ -144,6 +151,7 @@ extension TodoListViewController: UISearchBarDelegate {
         // [cd] bedeutet das keine Umlaute und französischen Sonderzeichen beachtet werden
         // to specify case and diacritic insensitivity
         let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        print("searchBarSearch predicate: \(predicate)")
         
         // Sortierungsreihenfolge festlegen
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]

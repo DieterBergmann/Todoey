@@ -42,6 +42,7 @@ class CategoryViewController: UITableViewController {
         
     }
     
+    // prepare wird vor performSegue aufgerufen
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationVC = segue.destination as! TodoListViewController
         
