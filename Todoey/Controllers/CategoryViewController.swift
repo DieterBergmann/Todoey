@@ -20,7 +20,6 @@ class CategoryViewController: SwipeTableViewController {
         // Abgespeicherte Werte abfragen
         loadCategories()
         
-        tableView.rowHeight = 80.0
     }
     
     // MARK: - TableView Datasource Methods
