@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class CategoryViewController: SwipeTableViewController {
     
@@ -20,6 +21,8 @@ class CategoryViewController: SwipeTableViewController {
         // Abgespeicherte Werte abfragen
         loadCategories()
         
+        tableView.separatorStyle = .none
+        
     }
     
     // MARK: - TableView Datasource Methods
@@ -29,18 +32,19 @@ class CategoryViewController: SwipeTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
+        // nil-coalescing operator (a ?? b) = Wenn der optional-Parameter ungleich nil ist wird der Wert vor ?? verwendet, sonst der Default-Wert danach
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
+        cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].colour ?? "4FA3F7")
+        cell.textLabel?.textColor = ContrastColorOf(UIColor(hexString: categories?[indexPath.row].colour ?? "4FA3F7")!, returnFlat: true)
         
         return cell
     }
     
     // MARK: - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         performSegue(withIdentifier: "goToItems", sender: self)
-        
     }
     
     // prepare wird vor performSegue aufgerufen
@@ -64,6 +68,7 @@ class CategoryViewController: SwipeTableViewController {
             
             let newCategory = Category()
             newCategory.name = textField.text!
+            newCategory.colour = UIColor.randomFlat.hexValue()
             
             // Encoding Data with NSCoder
             self.save(category: newCategory)
@@ -96,9 +101,7 @@ class CategoryViewController: SwipeTableViewController {
     }
     
     func loadCategories() {
-
         categories = realm.objects(Category.self)
-        
         tableView.reloadData()
     }
     
